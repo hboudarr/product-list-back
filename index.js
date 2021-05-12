@@ -1,10 +1,12 @@
 // package import
 const express = require("express");
+const formidable = require("express-formidable");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
 // package initialization
 const app = express();
+app.use(formidable());
 app.use(cors());
 
 // dotenv config

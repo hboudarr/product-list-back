@@ -18,10 +18,10 @@ router.get("/product", async (req, res) => {
 });
 
 // create a product
-router.get("/product/create", async (req, res) => {
+router.post("/product/create", async (req, res) => {
     try {
         // destructuring
-        const { name, brand, price, quantity } = req.query;
+        const { name, brand, price, quantity } = req.fields;
 
         // checking before acces to DB
         if (name && brand && price && quantity) {
@@ -84,12 +84,14 @@ router.get("/product/update/:id", async (req, res) => {
 // delete the product
 router.get("/product/del/:id", async (req, res) => {
     try {
-        // looking in DB if the product exists
-        productToDelete = await Product.findById(req.params.id);
-
-        await productToDelete.delete();
-
-        res.status(200).json("Product deleted succesfully !");
+        if (req.params.id) {
+            const productToDelete = await Product.findByIdAndDelete(
+                req.params.id
+            );
+            res.status(200).json(`Product deleted`);
+        } else {
+            res.status(400).json("Product does not exist");
+        }
     } catch (error) {
         console.log(error.message);
         res.status(400).json({ error: error.message });
